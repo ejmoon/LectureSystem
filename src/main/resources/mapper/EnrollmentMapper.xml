@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.company.education.enrollment.EnrollmentDAO">
+
+    <select id="selectEnrollmentsByEmployeeId" resultType="Enrollment">
+        SELECT
+            EN.ENROLLMENT_SEQ
+             , EM.EMPLOYEE_ID
+             , LE.LECTURE_SEQ
+             , LE.SCHEDULE
+             , LE.SUMMARY
+        FROM ENROLLMENT EN
+        JOIN LECTURE LE ON EN.LECTURE_SEQ = LE.LECTURE_SEQ
+        JOIN EMPLOYEE EM ON EN.EMPLOYEE_SEQ = EM.EMPLOYEE_SEQ
+        WHERE EM.EMPLOYEE_ID = #{employeeId}
+    </select>
+
+    <select id="selectEnrolledEmployeeIds" resultType="String">
+        SELECT EM.EMPLOYEE_ID
+        FROM ENROLLMENT EN
+        JOIN EMPLOYEE EM ON EN.EMPLOYEE_SEQ = EM.EMPLOYEE_SEQ
+        WHERE EN.LECTURE_SEQ = #{lectureSeq}
+    </select>
+
+    <select id="selectCountAvailableLecture" parameterType="Enrollment" resultType="Integer">
+        SELECT COUNT(LECTURE_SEQ)
+        FROM LECTURE
+        WHERE NOW() BETWEEN DATE_ADD(SCHEDULE, INTERVAL -1 WEEK) AND DATE_ADD(SCHEDULE, INTERVAL +1 DAY)
+        AND LECTURE_SEQ = #{lectureSeq}
+    </select>
+
+    <select id="selectCountEnrollingLecture" parameterType="Enrollment" resultType="Integer">
+        SELECT COUNT(EN.ENROLLMENT_SEQ)
+        FROM ENROLLMENT EN
+        JOIN EMPLOYEE EM ON EN.EMPLOYEE_SEQ = EM.EMPLOYEE_SEQ
+        WHERE LECTURE_SEQ = #{lectureSeq} AND EM.EMPLOYEE_SEQ = #{employeeSeq}
+    </select>
+
+    <select id="selectLectureEmptySeat" parameterType="Enrollment" resultType="Integer">
+        SELECT EMPTY_SEAT
+        FROM LECTURE
+        WHERE LECTURE_SEQ = #{lectureSeq} FOR UPDATE
+    </select>
+
+    <insert id="insertEnrollment" parameterType="Enrollment">
+        INSERT INTO ENROLLMENT
+            (LECTURE_SEQ, EMPLOYEE_SEQ, STATUS)
+        VALUES(#{lectureSeq}, #{employeeSeq}, 1)
+    </insert>
+
+    <update id="updateLectureEmptySeat" parameterType="Enrollment">
+        UPDATE LECTURE
+        SET EMPTY_SEAT = (EMPTY_SEAT - 1)
+        WHERE LECTURE_SEQ = #{lectureSeq}
+    </update>
+
+</mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.company.education.lecture.LectureDAO">
+
+    <select id="selectAllLectures" resultType="Lecture">
+        SELECT
+            LECTURE_SEQ
+             , TALKER
+             , PLACE
+             , CAPACITY
+             , EMPTY_SEAT
+             , SCHEDULE
+             , SUMMARY
+        FROM LECTURE
+        ORDER BY LECTURE_SEQ DESC
+    </select>
+
+    <select id="selectLectures" resultType="Lecture">
+        SELECT
+               LECTURE_SEQ
+             , TALKER
+             , PLACE
+             , CAPACITY
+             , EMPTY_SEAT
+             , SCHEDULE
+             , SUMMARY
+        FROM LECTURE
+        WHERE NOW() BETWEEN DATE_ADD(SCHEDULE, INTERVAL -1 WEEK) AND DATE_ADD(SCHEDULE, INTERVAL +1 DAY)
+        ORDER BY SCHEDULE
+    </select>
+
+    <insert id="insertLecture" parameterType="Lecture">
+        INSERT INTO LECTURE
+            (TALKER, PLACE, CAPACITY, EMPTY_SEAT, SUMMARY, SCHEDULE, STATUS)
+        VALUES(#{talker}, #{place}, #{capacity}, #{capacity}, #{summary}, #{schedule}, 1)
+    </insert>
+</mapper>
