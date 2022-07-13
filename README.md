@@ -25,9 +25,11 @@
   * 업무 도메인 파악에 유리
   * 캡슐화를 이용 하여 핵심 비즈니스 보호
     * controller 에서 repository(DAO) 직접 호출 불가. 비즈니스 로직은 오직 serice 단에서 가능.
-  * 업무 로직을 작성할 때 해당 컴포넌트만 이용
-  * 현재 프로젝트는 다이어그램과 달리 service interface 는 생략하였음   
-![Class Diagrem](https://user-images.githubusercontent.com/41390496/178686773-0f11a69e-3cc7-4297-bc40-56a6c217b455.jpg)
+  * 업무 로직을 작성할 때 해당 컴포넌트만 이용     
+![Class Diagrem](https://user-images.githubusercontent.com/41390496/178686773-0f11a69e-3cc7-4297-bc40-56a6c217b455.jpg)   
+  * 현재 프로젝트는 다이어그램과 달리 service interface 는 생략하였음  
+![image](https://user-images.githubusercontent.com/41390496/178703752-c67d17c3-ee3d-473e-b800-30de3c59ff65.png)
+
 
 **4. 비즈니스 로직 구현**
 * 강연 예약의 동시성 이슈   
